@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const crypto = require('crypto');
@@ -45,7 +46,7 @@ if (!GMAIL_USER || !GMAIL_PASS) {
     process.exit(1);
 }
 
-// إعداد Nodemailer مع التوافق التام مع Render
+// إعداد Nodemailer مع التوافق التام مع Render و IPv4
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
