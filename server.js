@@ -45,13 +45,16 @@ if (!GMAIL_USER || !GMAIL_PASS) {
     process.exit(1);
 }
 
-// إعداد Nodemailer باستخدام متغيرات البيئة المحمية
+// إعداد Nodemailer مع التوافق التام مع Render
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // استخدام TLS عبر Port 587
     auth: {
         user: GMAIL_USER,
         pass: GMAIL_PASS
-    }
+    },
+    family: 4 // إجبار الاتصال على استخدام IPv4 فقط لتفادي خطأ ENETUNREACH
 });
 
 // فحص الاتصال بسيرفر الجيميل
