@@ -20,7 +20,7 @@ const sessions = {};
 const lastSendAt = {};
 
 const CODE_TTL_MS = 10 * 60 * 1000;       // صلاحية الكود: 10 دقائق
-const MAX_VERIFY_ATTEMPTS = 5;             // أقصى عدد محاولات خاطئة
+const MAX_VERIFY_ATTEMPTS = 5;            // أقصى عدد محاولات خاطئة
 const SEND_COOLDOWN_MS = 60 * 1000;        // طلب كود جديد كل 60 ثانية كحد أدنى
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // صلاحية جلسة الدخول: 7 أيام
 
@@ -45,7 +45,7 @@ if (!GMAIL_USER || !GMAIL_PASS) {
     process.exit(1);
 }
 
-// إعداد Nodemailer[cite: 2]
+// إعداد Nodemailer باستخدام متغيرات البيئة المحمية
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -54,7 +54,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// فحص الاتصال بسيرفر الجيميل[cite: 2]
+// فحص الاتصال بسيرفر الجيميل
 transporter.verify((error, success) => {
     if (error) {
         console.error('❌ خطأ في الاتصال بسيرفر الجيميل:', error.message);
@@ -65,7 +65,7 @@ transporter.verify((error, success) => {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// 1. مسار إرسال كود التفعيل[cite: 2]
+// 1. مسار إرسال كود التفعيل
 app.post('/api/send-code', async (req, res) => {
     const { name, email } = req.body;
     if (!email || !name) return res.status(400).send({ error: 'البيانات غير مكتملة' });
@@ -108,7 +108,7 @@ app.post('/api/send-code', async (req, res) => {
     }
 });
 
-// 2. مسار التحقق من الكود[cite: 2]
+// 2. مسار التحقق من الكود
 app.post('/api/verify-code', (req, res) => {
     const { email, code } = req.body;
     const entry = verificationCodes[email];
@@ -157,7 +157,7 @@ app.post('/api/verify-token', (req, res) => {
     res.status(200).send({ user: { name: session.name, email: session.email } });
 });
 
-// --- إعدادات Socket.io للمكالمات والمحادثة ---[cite: 2]
+// --- إعدادات Socket.io للمكالمات والمحادثة ---
 io.on('connection', (socket) => {
   socket.on('join-room', ({ roomId, userName }) => {
     socket.join(roomId);
@@ -200,7 +200,7 @@ io.on('connection', (socket) => {
   });
 });
 
-// استخدام المنفذ الديناميكي المخصص للسحابة والاستماع على جميع العناوين المتاحة[cite: 2]
+// استخدام المنفذ الديناميكي المخصص للسحابة والاستماع على جميع العناوين المتاحة
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
